@@ -112,8 +112,10 @@ defmodule ClusterDocker.Strategy.Service do
   @spec get_nodes(State.t()) :: {:ok, [atom()]} | {:error, []}
   def get_nodes(%{config: config}) do
     app_prefix = Keyword.get(config, :app_prefix, "app")
+    filter = Keyword.get(config, :filter, &ClusterDocker.exists?/1)
+    filter_keys = Keyword.get(config, :filter_keys, ["Labels", "libcluster_docker"])
 
-    containers = ClusterDocker.filter(["Labels", "maintainer"], fn x -> not is_nil(x) end)
+    containers = ClusterDocker.filter(filter_keys, filter)
 
     response =
       containers

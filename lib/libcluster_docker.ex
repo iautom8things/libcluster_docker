@@ -27,6 +27,9 @@ defmodule ClusterDocker do
     |> Enum.map(&Docker.container(config, &1))
   end
 
+  def exists?(nil), do: false
+  def exists?(_), do: true
+
   def get_container_with(container, keys, filterer) do
     container
     |> get_in(keys)
